@@ -1,0 +1,1010 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!--  Guidance Fast Start Template SCF -->
+<!--  Authors: Kayla Murray | Piotr Krychniak | Rob Fowler     -->
+<!--  Date Created: July 7 2016   -->
+<!--
+ == $Revision$
+ == $Date$
+ == $Author$
+ ==
+ == Copyright (c) PROS Revenue Management.  All Rights Reserved.
+ == This software is the confidential and proprietary information of
+ == PROS Revenue Management ("Confidential Information").
+ == You shall not disclose such Confidential Information and shall use it
+ == only in accordance with the terms of the license agreement you entered
+ == into with PROS.
+  -->
+<Application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../appgen/config/ApplicationSchema.xsd">
+
+  <ApplicationProperties appDescription="Guidance Fast Start Sample Environment" appDisplayName="Guidance Fast Start" appName="PPSS" autoLogon="true" dataInterface="custom-web-service" enableLeaderFollower="true" enableTaskHistoryDetail="true" enableTaskHistoryReporter="true" globalCurrencyCode="USD" globalUOM="EA" ssoMode="IIS_ISAPI" tableNamePrefix="PA_"/>
+
+  <StartupProperties/>
+  <Notification bodyId="notificationDialog" height="300" width="400"/>
+  <UIConfig appSkin="PROS_Blue" showSideBar="false" sideBarWidth="200"/>
+  <SecurityConfig autogenerate="true"/>
+
+ <!-- ============================================================== -->
+ <!-- NAVIGATION                                                     -->
+ <!-- ============================================================== -->
+	<Navigation>
+		<AnalyticsModule>
+			<Menu name="Dashboards">
+				<MenuItem page="Price Guidance Validation Dashboard" externalPage="true"/>
+			</Menu>
+			<Menu name="Segmentation">
+				<MenuItem name="Segmentation Manager" page="SM_Segmentation"/>
+				<MenuItem name="Segmentation Viewer" page="segmentation_viewer"/>
+			</Menu>
+		</AnalyticsModule>
+		<AdminModule>
+			<Menu name="User Administration">
+				<MenuItem name="Users" page="listallusers"/>
+				<MenuItem name="Roles" page="listallroles"/>
+				<MenuItem name="Privileges" page="listallprivileges"/>
+				<MenuItem name="Work Teams" page="listallworkteams"/>
+			</Menu>
+			<Menu name="Data Editor/Viewer">
+				<Menu name="Cubes">
+					<MenuItem cube="TRANSACTIONS" name="TRANSACTIONS"/>
+				</Menu>
+				<Menu name="Dimensions">
+					<MenuItem dimension="CUSTOMER" name="CUSTOMER"/>
+					<MenuItem dimension="PRODUCT" name="PRODUCT"/>
+					<MenuItem dimension="REGION" name="REGION"/>
+				</Menu>
+				<Menu name="Datasets">
+					<MenuItem name="DataSet Editor" page="CF_BOSelector"/>
+				</Menu>
+			</Menu> 
+			<Menu name="Configure">
+				<Menu name="Analytics">
+					<MenuItem name="${label.uif.WEB_USER_PROFILE_PAGE_TITLE}" page="CF_UserProfileConfiguration" privilege="System Administration"/>
+					<MenuItem name="${label.uif.WEB_SIDEBAR_PAGE_TITLE}" page="CF_SidebarConfiguration" privilege="System Administration"/>
+					<MenuItem name="Cube Configuration" page="ANALYTICS_CubeConfig"/>
+					<MenuItem name="${label.uif.WEB_MANAGE_IMAGES_TITLE}" page="image_manager" privilege="System Administration"/>
+					<MenuItem name="${label.uif.WEB_REPORTING_LINKS_PAGE_TITLE}" page="CF_Configurable_Links" privilege="System Administration"/>
+					<MenuItem name="${label.uif.WEB_EXTERNAL_LINKS_PAGE_TITLE}" page="CF_External_Links" privilege="System Administration"/>
+					<MenuItem name="${label.uif.WEB_WORKFLOW_ANALYTICS_PAGE_TITLE}" page="CF_Workflow_Analytics" privilege="System Administration"/>
+					 <MenuItem name="Assign Preferred Colors" page="CF_PreferredColorsConfiguration" privilege="System Administration"/>
+					 <MenuItem name="Assign Preferred Measure Colors" page="CF_PreferredMeasureColorsConfiguration" privilege="System Administration"/>
+				</Menu>
+				<Menu name="Price Optimizer">
+					<MenuItem name="Component Types and Pricing Levels" page="PM_componentType_PriceLevels" privilege="Configure Component Types and Pricing Levels"/>
+					<MenuItem name="Rebate Types" page="PM_rebateTypeSummary" privilege="View Rebate Types"/>
+					<MenuItem name="Horizon Management" page="PM_servicedate_config" privilege="Configure Horizons"/>
+					<MenuItem name="Units Of Measure" page="PM_uom" privilege="Configure Units Of Measure"/>
+					<MenuItem name="Calendars" page="pm_calendar" privilege="Configure Calendars"/>
+					<MenuItem name="Dimension Attribute Set" page="PM_dim_attr_set_config" privilege="Configure Dimension Attribute Set"/>
+					<MenuItem name="Dimension Key Length Management" page="PM_dim_key_length" privilege="System Administration"/>
+				</Menu>
+				<Menu name="Tasks Reports">
+					<MenuItem name="Task History" page="task_history"/>
+					<MenuItem name="Task Links" page="CF_Task_Launcher" privilege="System Administration"/>
+				</Menu>
+				<Menu name="Pricing Science">
+					<Menu name="Segmentation">
+						<MenuItem name="Segment Properties" page="sy_sm_segment_properties" privilege="System Administration"/>
+						<MenuItem name="Segmentation Configurator" page="segmentation_configurator"/>
+					</Menu>
+					<Menu name="Pricing Guidance">
+					</Menu>
+				</Menu>
+				<MenuItem name="System Parameters" page="system_parameters" privilege="System Administration"/>
+			</Menu>
+	<!-- ============================================================== -->
+   <!-- EXCEL IMPORTS , SCF file extract                               -->
+   <!-- ============================================================== -->
+			
+			<Menu name="Excel Imports">
+				<!--=========================================================Import PROS Cube Dimension==============================-->
+				<MenuItem dialogHeight="220" dialogWidth="500" name="Import PROS Transaction CUBE" page="Import Transaction cube"/>
+				<!--=====================================================================================================================-->
+				<MenuItem dialogHeight="220" dialogWidth="500" name="Import PROS Product Dimesion" page="Import Product Dimesion"/>
+				<MenuItem dialogHeight="220" dialogWidth="500" name="Import PROS Region Dimesion" page="Import Region Dimesion"/>
+				<MenuItem dialogHeight="220" dialogWidth="500" name="Import PROS SALES_REP Dimesion" page="Import SALES_REP Dimesion"/>
+				
+			</Menu>
+			
+			   
+		 
+			
+		</AdminModule>
+	  </Navigation>
+ <!-- This section defines the name and appearance of the dialog, as well as the format of the imported spreadsheet -->
+			  <ExcelImport name="Import Transaction cube" title="Import Transaction cube" prompt="Type the name of the Excel file you want to import or click the Browse button to select a file.">
+				<ExcelTemplate sheet="PROS">
+				  <Entity name="TRANSACTIONS" type="detail">
+					<Field name="TRANSACTIONS"         			title="TRANSACTIONS"         	row="1" col="1"/>
+					<Field name="DAY"         					title="DAY"         			row="1" colOffset="1"/>
+					<Field name="SOLD_TO_ID"           			title="SOLD_TO_ID"           	row="1" colOffset="1"/>
+					<Field name="PRODUCT_ID"            		title="PRODUCT_ID"             	row="1" colOffset="1"/>
+					<Field name="SALES_REGION"           		title="SALES_REGION"           	row="1" colOffset="1"/>
+					<Field name="SALES_ORG_LEAF_ID"           	title="SALES_ORG_LEAF_ID"       row="1" colOffset="1"/>
+					<Field name="TXN_SEG"            	 		title="TXN_SEG"             	row="1" colOffset="1"/>
+					<Field name="PG_VALIDITY"           		title="PG_VALIDITY"           	row="1" colOffset="1"/>
+					<Field name="PG_LEVEL"   					title="PG_LEVEL"   				row="1" colOffset="1"/>
+					<Field name="PRICE_CHANGE_FLR_ID"  	 		title="PRICE_CHANGE_FLR_ID"   	row="1" colOffset="1"/>
+					<Field name="PRICE_CHANGE_INC_ID"   		title="PRICE_CHANGE_INC_ID"   	row="1" colOffset="1"/>
+					<Field name="PRICE_CHANGE_TGT_ID"   		title="PRICE_CHANGE_TGT_ID"   	row="1" colOffset="1"/>
+					<Field name="SALES_UOM"   					title="SALES_UOM"   			row="1" colOffset="1"/>
+					<Field name="SALES_VOLUME"   				title="SALES_VOLUME"   			row="1" colOffset="1"/>
+					<Field name="SALES_REVENUE"   				title="SALES_REVENUE"   		row="1" colOffset="1"/>
+					<Field name="COGS"   						title="COGS"   					row="1" colOffset="1"/>
+					<Field name="FREIGHT_COST"   				title="FREIGHT_COST"   			row="1" colOffset="1"/>
+					<Field name="MARGIN"   						title="MARGIN"   				row="1" colOffset="1"/>
+					<Field name="PG_FLOOR_PERC"   				title="PG_FLOOR_PERC"   		row="1" colOffset="1"/>
+					<Field name="PG_TARGET_PERC"   				title="PG_TARGET_PERC"   		row="1" colOffset="1"/>
+					<Field name="PG_EXPERT_PERC"   				title="PG_EXPERT_PERC"   		row="1" colOffset="1"/>
+					<Field name="PG_FLOOR"   					title="PG_FLOOR"   				row="1" colOffset="1"/>
+					<Field name="PG_TARGET"   					title="PG_TARGET"   			row="1" colOffset="1"/>
+					<Field name="PG_EXPERT"   					title="PG_EXPERT"   			row="1" colOffset="1"/>
+					<Field name="MARGIN_PCT_PG"   				title="MARGIN_PCT_PG"   		row="1" colOffset="1"/>
+				  </Entity>
+			   </ExcelTemplate>
+			  </ExcelImport>
+
+ <!-- ============================================================== -->
+ <!-- DIMENSIONS                                                     -->
+ <!-- ============================================================== -->
+	<Dimension autoManaged="true" name="DATE" title="Transaction Date" type="time">
+		<Level levelType="TimeYears" name="YEAR" showWithFacts="true" title="Year"/>
+		<Level levelType="TimeQuarters" name="QUARTER" title="Quarter"/>
+		<Level levelType="TimeMonths" name="MONTH" title="Month"/>
+		<Level levelType="TimeDays" name="DAY" title="Day"/>
+	</Dimension>
+	
+	<!-- Product Dimension DRD -->
+    
+	<Dimension incrementalUpdates="true" name="PRODUCT" title="Product">
+		<Level name="PRODUCT_LINE" title="Product Line"/>
+		<Level name="PRODUCT_GROUP" title="Product Group"/>
+		<Level name="PLANT" title="Plant"/>
+		<Level descColumn="PROD_DESC" name="PRODUCT_ID" title="Product Number">
+			<Attribute filter="true" name="PRODUCT_COLOR" title="Product Color"/>
+			<Attribute filter="true" name="VENDOR" title="Vendor"/>
+			<Attribute filter="true" name="PRODUCT_COST_DIM" title="Product Cost"/>
+			<Attribute filter="true" name="ITEM_STATUS_CODE" title="Item Status"/>
+		</Level>
+	</Dimension>
+	
+	
+	
+	
+	
+	<!-- Product Dimension DRD -->
+	
+ <!-- ============================================================== -->
+ <!-- CUSTOMER                                                       -->
+ <!-- ============================================================== -->
+	<Dimension name="CUSTOMER"  title="Sold To Customer">
+		<Level name="CUSTOMER_CLASS" title="Class"/>
+		<Level name="CUSTOMER_SUBCLASS" title="Sub-Class"/>
+		<Level name="SOLD_TO_ID" descColumn="CUSTOMER_DESC" title="Sold To Customer Code">
+			<Attribute filter="true" name="ZIP_CODE" title="Zip Code" type="string"/>
+			<Attribute filter="true" name="STATE" title="State" type="string"/>
+			<Attribute filter="false" name="DSO" title="Days Sales Outstanding" type="integer"/>
+			<Attribute filter="false" name="SIC_CODE" title="Std. Industry Classif." type="string"/>
+			<Attribute defaultValue="0" name="ANNUAL_REVENUE" title="Annual Revenue" type="integer"/>
+			<Attribute defaultValue="NOT_ASSIGNED" filter="true" name="CENTRICITY" title="Centricity" type="string"/>
+		</Level>
+	</Dimension>
+	  
+	
+		  
+	<Dimension incrementalUpdates="true" name="PRICE_METHOD_TYPE" title="Price Method Type">
+		<Level name="PRICE_METHOD_TYPE"/>
+	</Dimension>	
+
+	<!--   Guidance Fast Start -->
+	
+	  <!-- Transaction Segmentation Dimension; required for segmentation -->
+	<Dimension name="TXN_SEG" title="Transaction Segment">
+		<Level name="TXN_SEG" title="Transaction Segment"/>
+	</Dimension>
+	  
+	<!-- Price Guidance Validity Dimension --> 
+	<!-- Required for segmentation as a dimension or an attribute on the transactions table -->
+	<Dimension name="PG_VALIDITY" title="PG Validity">
+		<Level name="PG_VALIDITY" title="PG Validity"/>
+	</Dimension>
+	
+	<!-- Price Guidance Level Dimension --> 
+	<!-- Not required for segmentation; used to perform analysis on levels of guidance -->
+	<Dimension name="PG_LEVEL" title="PG Level">
+		<Level name="PG_LEVEL" descColumn="PG_LEVEL_DESC" title="PG Level">
+         <OrderByColumn name="PG_LEVEL_NUMBER" type="integer"/>
+		</Level>
+	</Dimension>
+
+
+    <!--  Price Change to Floor i.e. Actual Price to Floor if Actual below Floor -->
+ 	<!--  Not required for segmentation; used for histogram of Price Change vs Revenue Lift -->
+	<Dimension name="PRICE_CHANGE_FLOOR" refDim="PRICE_CHANGE_TARGET" title="Price Change to PG Floor">
+         <PrimaryKey name="PRICE_CHANGE_FLR_ID"/>
+	</Dimension>
+
+    <!--  Price Change to Target i.e. Actual Price to Target  if Actual below Target -->
+ 	<!--  Not required for segmentation; used for histogram of Price Change vs Revenue Lift -->
+	<Dimension name="PRICE_CHANGE_TARGET" title="Price Change">
+	<Level descColumn="PRICE_CHANGE_BKT_DESC" name="PRICE_CHANGE_BKT_ID" title="Price Change Bucket"/>
+		<Level descColumn="PRICE_CHANGE_DESC" name="PRICE_CHANGE_TGT_ID" title="Price Change">
+          <OrderByColumn name="ORDERED_PRICE_CHANGE" type="integer"/>
+        </Level>
+	</Dimension>
+	
+    <!--  Price Change Incremental Target i.e. Actual Price to Floor if below Floor, Actual Price
+     to Target if between Floor and  Target and Actual Price to Expert if Actual between Target and Expert   -->
+ 	<!--  Not required for segmentation; used for histogram of Price Change vs Revenue Lift -->
+	<Dimension name="PRICE_CHANGE_INC" refDim="PRICE_CHANGE_TARGET" title="Price Change to Incremental Target">
+               <PrimaryKey name="PRICE_CHANGE_INC_ID"/>
+	</Dimension>
+	
+     <!--  Price Change to Target i.e. Actual Price to Target  for All transactions -->
+ 	<!--  Not required for segmentation; used for histogram of Price Change vs Revenue Lift -->
+	<Dimension name="PRICE_CHANGE_TARGET_ALL" refDim="PRICE_CHANGE_TARGET"  title="Price Change for All Trans to PG Target">
+          <PrimaryKey name="PRICE_CHANGE_TGTALL_ID"/>
+	</Dimension>
+
+    <!--  Achievable Price Change is driven by guardrails for % or total dollar value stored in lookups for Cust/Prod -->
+ 	<!--  Not required for segmentation; used for histogram of Price Change vs Revenue Lift -->
+	<Dimension name="PRICE_CHANGE_ACHIEV" refDim="PRICE_CHANGE_TARGET" title="Price Change Achievable">
+               <PrimaryKey name="PRICE_CHANGE_ACHIEV_ID"/>
+	</Dimension>
+	
+	<!--  Price Guidance Revenue Uplift Scenarios dimension matching the Science Tools Scenarios definitions
+     Scenario I: Bring below floor to floor and keep others unchanged
+     Scenario II: Bring everyone to target
+     Scenario III: Bring below floor to floor, between floor and target to target, and keep others unchanged
+     Scenario IV: Bring below target to target and keep others unchanged
+     Scenario V: Bring everyone to Achievable Target applying guardrails
+
+    -->
+	<Dimension name="REV_UPLIFT_SCENARIO" title="Revenue Uplift Scenario">
+        <Level descColumn="REV_UPLIFT_SCENARIO_DESC" name="REV_UPLIFT_SCENARIO_ID" title="Revenue Uplift Scenario">
+          <OrderByColumn name="ORDERED_REV_UPLIFT_SCENARIO" type="integer"/>
+        </Level>
+	</Dimension>
+	
+ <!-- ============================================================== -->
+ <!-- REGION Dimension                                               -->
+ <!-- ============================================================== -->
+	<Dimension name="REGION"  title="REGION">
+		<Level name="SALES_REGION" descColumn="REGION" title="SALES REGION"/>		
+	</Dimension>	
+
+ 
+ <!-- ============================================================== -->
+ <!-- SALES_REP Dimension                                            -->
+ <!-- ============================================================== -->
+	<Dimension name="SALES_REP"  title="SALES REP">
+		<Level name="SALES_ORG_LEVEL_1" title="Secondary Manager Code"/>
+		<Level name="SALES_ORG_LEVEL_1_DESC" title="Secondary Manager"/>
+		<Level name="SALES_ORG_LEAF_ID" descColumn="SALES_ORG_LEAF_DESC" title="Sales Rep Code">
+			<Attribute name="SBU" title="SBU" filter="true"/>
+			<Attribute name="GBE" title="GBE" filter="true"/>
+			<Attribute name="BUSINESS_SEGMENT" title="Business Segment" filter="true"/>
+			
+		</Level>
+ 
+	</Dimension>
+ <!-- ============================================================== -->
+ <!-- CUBES                                                          -->
+ <!-- ============================================================== -->
+	<Cube incrementalUpdates="true" name="TRANSACTIONS">
+		<PrimaryKey name="TRANSACTIONS"/>
+		<Dimension name="DATE"/>
+		<Dimension name="CUSTOMER"/>
+		<Dimension name="PRODUCT"/>
+		<Dimension name="REGION"/>
+		<Dimension name="SALES_REP"/>
+		<Dimension name="TXN_SEG" nullable="true"/> <!-- used in segmentation, not required for dataloading -->
+		<Dimension name="PG_VALIDITY" nullable="true"/> <!-- used in price guidance, not required for dataloading -->
+		<Dimension name="PG_LEVEL" nullable="true"/> <!-- used in price guidance reporting, not required for dataloading -->
+		
+		<Dimension name="PRICE_CHANGE_FLOOR" nullable="true"/>   <!-- used for histogram of price change actual to pg floor-->
+        <Dimension name="PRICE_CHANGE_TARGET_ALL" nullable="true"/>  <!-- used for histogram of price change actual to pg target  -->
+		<Dimension name="PRICE_CHANGE_INC" nullable="true"/>     <!--  used for histogram of price change actual to next pg benchmark -->
+		<Dimension name="PRICE_CHANGE_TARGET" nullable="true"/>  <!-- used for histogram of price change actual to pg target  -->
+		<Dimension name="PRICE_CHANGE_ACHIEV" nullable="true"/>      <!--  used for histogram of price change actual to achievable target-->
+		
+		<Dimension name="REV_UPLIFT_SCENARIO" nullable="true"/> <!-- used for Revenue Lift Scenarios in Price Guidance, not required for dataloading -->
+		
+		<!-- FactDimension -->
+		
+		<FactDimension name="SALES_UOM" title="Sales Unit of Measure"/>
+
+		<Measure aggregator="sum" format="integer" formula="1" name="TXN_COUNT" title="Number of Transactions" type="row"/>
+		
+		<!-- Base Measures -->
+		<Measure aggregator="sum" format="integer" name="SALES_VOLUME" title="SALES_VOLUME"/>
+		<Measure aggregator="sum" format="currency" name="SALES_REVENUE" title="Net Sales Revenue - Document Currency"/>
+		<Measure aggregator="sum" format="currency" name="COGS" title="Standard Variable COGS" secure="false"/>
+		<Measure aggregator="sum" format="currency" name="FREIGHT_COST" title="Freight Cost"/>
+		<Measure aggregator="sum" format="currency" name="MARGIN" title="Margin"/>
+		<Measure aggregator="sum" format="percent" name="PG_RAW_FLOOR_PERC" secure="true" title="Z Do Not Use (Raw Floor Margin %)"/>
+		<Measure aggregator="sum" format="percent" name="PG_RAW_TARGET_PERC" secure="true" title="Z Do Not Use (Raw Target Margin %)"/>
+		<Measure aggregator="sum" format="percent" name="PG_RAW_EXPERT_PERC" secure="true" title="Z Do Not Use (Raw Expert Margin %)"/>
+		<Measure aggregator="sum" format="percent" name="PG_FLOOR_PERC" secure="true" title="Floor Price PCT"/>
+		<Measure aggregator="sum" format="percent" name="PG_TARGET_PERC" secure="true" title="Target Price PCT"/>
+		<Measure aggregator="sum" format="percent" name="PG_EXPERT_PERC" secure="true" title="Expert Price PCT"/>
+		<Measure aggregator="sum" format="percent" name="PG_ACHIEVE_PERC" secure="true" title="Z Do Not Use (Achievable Margin %)"/>
+		<Measure aggregator="sum" format="currency" name="PG_RAW_FLOOR" title="Raw Floor Revenue"/>
+		<Measure aggregator="sum" format="currency" name="PG_RAW_TARGET" title="Raw Target Revenue"/>
+		<Measure aggregator="sum" format="currency" name="PG_RAW_EXPERT" title="Raw Expert Revenue"/>
+		<Measure aggregator="sum" format="currency" name="PG_FLOOR" title="Floor Price"/>
+		<Measure aggregator="sum" format="currency" name="PG_TARGET" title="Target Price"/>
+		<Measure aggregator="sum" format="currency" name="PG_EXPERT" title="Expert Price"/>
+		<Measure aggregator="sum" format="currency" name="PG_TARGET_ACHIEV" title="Achievable Target Revenue"/>
+		<Measure aggregator="sum" format="percent" name="MARGIN_PCT_PG" secure="true" title="Margin Percent PG"/>
+		
+	
+
+		<!-- Calculated Measures -->
+		
+		
+		<Measure aggregator="count" baseMeasure="MARGIN_PCT_PG" format="integer" name="MP_COUNT" title="Count Margin Pct PG"/>
+		<Measure format="percent" formula="DivideUnlessZero([MARGIN_PCT_PG],[MP_COUNT], 0)" name="AVG_MARGIN_PCT_PG" title="PG Margin %" type="group"/>
+		<Measure format="percent" formula="DivideUnlessZero([MARGIN], [SALES_REVENUE], 0)" name="MARGIN_PERCENT" title="Margin %" type="group"/>
+		<Measure format="currency" formula="DivideUnlessZero([SALES_REVENUE],[SALES_VOLUME], 0)" name="UNIT_PRICE" title="Unit Price" type="group"/>
+		
+		<!-- Guidance Measures -->
+		<Measure aggregator="count" baseMeasure="PG_FLOOR" format="integer" name="PG_COUNT" title="PG Count"/>
+		
+		<!-- Average Guidance Margin % Measures -->
+		<Measure aggregator="sum" format="currency-comma" formula="[PG_FLOOR] - [COGS]" name="FLOOR_MARGIN" title="Floor Margin $" type="row"/>
+		<Measure aggregator="sum" format="currency-comma" formula="[PG_TARGET] - [COGS]" name="TARGET_MARGIN" title="Target Margin $" type="row"/>
+		<Measure aggregator="sum" format="currency-comma" formula="[PG_EXPERT] - [COGS]" name="EXPERT_MARGIN" title="Expert Margin $" type="row"/>
+		<Measure aggregator="sum" format="currency-comma" formula="[PG_TARGET_ACHIEV] - [COGS]" name="TARGET_MARGIN_ACHIEV" title="Achievable Margin $" type="row"/>
+		
+		<Measure format="percent_2Dec" formula="DivideUnlessZero([FLOOR_MARGIN],[PG_FLOOR],null)" name="FLOOR_MARGIN_PERC" title="Floor Margin %" type="group"/>
+		<Measure format="percent_2Dec" formula="DivideUnlessZero([TARGET_MARGIN],[PG_TARGET],null)" name="TARGET_MARGIN_PERC" title="Target Margin %" type="group"/>
+		<Measure format="percent_2Dec" formula="DivideUnlessZero([EXPERT_MARGIN],[PG_EXPERT],null)" name="EXPERT_MARGIN_PERC" title="Expert Margin %" type="group"/>		
+		<Measure format="percent_2Dec" formula="DivideUnlessZero([TARGET_MARGIN_ACHIEV],[PG_TARGET_ACHIEV],null)" name="TARGET_ACHIEV_MARGIN_PERC" title="Achievable Margin %" type="group"/>
+		
+		<!-- New Measures for SA practice -->
+		<Measure aggregator="sum" format="currency" name="REV_BELOW_FLOOR" title="NM-Rev Below Floor" type="row"
+		formula="{CASE 
+				WHEN [SALES_REVENUE] &lt; ([PG_FLOOR] * [SALES_VOLUME]) AND ([PG_FLOOR] * [SALES_VOLUME]) IS NOT NULL
+					THEN [SALES_REVENUE] 
+					ELSE NULL 
+				END}" 
+		/>
+		
+		
+
+		<Measure aggregator="sum" format="currency" name="REV_BTWN_FLOOR_TGT" title="NM-Rev Btwn Below Floor" type="row"
+		formula="{CASE 
+				WHEN [SALES_REVENUE] &gt; ([PG_FLOOR] * [SALES_VOLUME]) AND [SALES_REVENUE] &lt; ([PG_TARGET] * [SALES_VOLUME]) AND [SALES_REVENUE] IS NOT NULL AND ([PG_TARGET] * [SALES_VOLUME]) IS NOT NULL
+					THEN [SALES_REVENUE] 
+					ELSE NULL 
+				END}" 
+		/>
+		
+		<Measure aggregator="sum" format="currency" name="REV_BTWN_TGT_EXP" title="NM-Rev Btwn Tgt Exp" type="row"
+		formula="{CASE 
+				WHEN [SALES_REVENUE] &gt; ([PG_TARGET] * [SALES_VOLUME]) AND [SALES_REVENUE] &lt; ([PG_EXPERT] * [SALES_VOLUME]) AND [SALES_REVENUE] IS NOT NULL AND ([PG_TARGET] * [SALES_VOLUME]) IS NOT NULL
+					THEN [SALES_REVENUE] 
+					ELSE NULL 
+				END}" 
+		/>
+		<Measure aggregator="sum" format="currency" name="REV_ABOVE_EXP" title="NM-Rev Above Exp" type="row"
+		formula="{CASE 
+				WHEN [SALES_REVENUE] &gt; ([PG_EXPERT] * [SALES_VOLUME]) AND ([PG_EXPERT] * [SALES_VOLUME]) IS NOT NULL 
+					THEN [SALES_REVENUE] 
+					ELSE NULL 
+						END}" 
+		/>
+
+		<!-- Opportunities -->
+		
+		<!-- Scenario I: Bring below floor to floor and keep others unchanged -->
+		<Measure aggregator="sum" format="currency-comma" formula="{CASE WHEN [PG_FLOOR] &gt; [SALES_REVENUE] AND [SALES_REVENUE] &gt; 0 THEN [PG_FLOOR] - [SALES_REVENUE] ELSE null END}" name="FLOOR_OPPORTUNITY" title="Floor Opp $" type="row"/>
+		
+		<!-- Scenario II: Bring everyone to target  can be negative opportunity if transactions are above Target -->
+		<Measure aggregator="sum" format="currency-comma" formula="[PG_TARGET] - [SALES_REVENUE]" name="TARGET_ALL_OPPORTUNITY" title="Target All Opp $" type="row"/>
+		
+		<!-- Scenario III: Incremental Target: Bring below floor to floor, between floor and target to target, and keep others unchanged  -->	
+		<Measure aggregator="sum" format="currency-comma" formula="{CASE WHEN [SALES_REVENUE] &lt; [PG_FLOOR] AND [SALES_REVENUE] &gt; 0 THEN [PG_FLOOR] - [SALES_REVENUE] WHEN [SALES_REVENUE] BETWEEN [PG_FLOOR] AND [PG_TARGET] AND [SALES_REVENUE] &gt; 0 THEN [PG_TARGET] - [SALES_REVENUE] ELSE null END}" name="INCREMENTAL_TARGET_OPPORTUNITY" title="Incremental Target Opp" type="row"/>
+		
+		<!-- Scenario IV: Bring below target to target and keep others unchanged -->
+		<Measure aggregator="sum" format="currency-comma" formula="{CASE WHEN [PG_TARGET] &gt; [SALES_REVENUE] AND [SALES_REVENUE] &gt; 0 THEN [PG_TARGET] - [SALES_REVENUE] ELSE null END}" name="TARGET_OPPORTUNITY" title="Target Opp $" type="row"/>
+		
+		<!-- Scenario V: Bring everyone to Achievable Target applying guardrails -->
+		<Measure aggregator="sum" format="currency-comma" formula="{CASE WHEN [PG_TARGET_ACHIEV] &gt; [SALES_REVENUE] AND [SALES_REVENUE] &gt; 0 THEN [PG_TARGET_ACHIEV] - [SALES_REVENUE] ELSE null END}" name="TARGET_ACHIEV_OPPORTUNITY" title="Achievable Opp $" type="row"/>
+		
+		
+		<!-- Expert Opportunity -->
+		<Measure aggregator="sum" format="currency-comma" formula="{CASE WHEN [PG_EXPERT] &gt; [SALES_REVENUE] AND [SALES_REVENUE] &gt; 0 THEN [PG_EXPERT] - [SALES_REVENUE] ELSE null END}" name="EXPERT_OPPORTUNITY" title="Expert Opp $" type="row"/>
+		
+        <!-- Revenue Distribution -->
+		<Measure aggregator="sum" format="currency" formula="{CASE WHEN [SALES_REVENUE] &lt; [PG_FLOOR] AND [SALES_REVENUE] &gt; 0 THEN [SALES_REVENUE] ELSE null END}" name="REVENUE_BELOW_FLOOR" title="Rev Below Floor" type="row"/>
+		<Measure aggregator="sum" format="currency" formula="{CASE WHEN [SALES_REVENUE] &gt;= [PG_FLOOR] AND [SALES_REVENUE] &lt; [PG_TARGET] AND [SALES_REVENUE] &gt; 0 THEN [SALES_REVENUE] ELSE null END}" name="REVENUE_BTWN_FLOOR_TARGET" title="Rev Btwn Floor and Target" type="row"/>
+		<Measure aggregator="sum" format="currency" formula="{CASE WHEN [SALES_REVENUE] &gt;= [PG_TARGET] AND [SALES_REVENUE] &lt; [PG_EXPERT] AND [SALES_REVENUE] &gt; 0 THEN [SALES_REVENUE] ELSE null END}" name="REVENUE_BTWN_TARGET_EXPERT" title="Rev Btwn Target and Expert" type="row"/>
+		<Measure aggregator="sum" format="currency" formula="{CASE WHEN [SALES_REVENUE] &gt;= [PG_EXPERT] AND [SALES_REVENUE] &gt; 0 THEN [SALES_REVENUE] ELSE null END}" name="REVENUE_ABOVE_EXPERT" title="Rev Above Expert" type="row"/>
+	
+		<!-- Hypothetical Floor, Target Revenue-->
+		<Measure aggregator="sum" format="currency-comma" formula="{CASE WHEN [PG_FLOOR] &gt; [SALES_REVENUE] AND [SALES_REVENUE] &gt; 0 THEN [PG_FLOOR] ELSE null END}" name="FLOOR_OPPORTUNITY_HYPO" title="Floor Hypothetical" type="row"/>
+		<Measure aggregator="sum" format="currency-comma" formula="[REVENUE_BTWN_FLOOR_TARGET]+[REVENUE_BTWN_TARGET_EXPERT]+[REVENUE_ABOVE_EXPERT]+[FLOOR_OPPORTUNITY_HYPO]" name="FLOOR_OPPORTUNITY_REV" title="Floor Hypothetical Rev" type="row"/>
+		<Measure aggregator="sum" format="currency-comma" formula="{CASE WHEN [SALES_REVENUE] &gt; [PG_FLOOR] AND [SALES_REVENUE] &lt; [PG_TARGET] AND [SALES_REVENUE] &gt; 0 THEN [PG_TARGET] ELSE 0 END}" name="TARGET_OPPORTUNITY_HYPO" title="Target Hypothetical" type="row"/>
+		<Measure aggregator="sum" format="currency-comma" formula="[REVENUE_BELOW_FLOOR]+[REVENUE_BTWN_TARGET_EXPERT]+[REVENUE_ABOVE_EXPERT]+[TARGET_OPPORTUNITY_HYPO]" name="TARGET_OPPORTUNITY_REV" title="Target Hypothetical Rev" type="row"/>
+		
+		<!-- Target Margin/Opportunity Dollars and Percents -->
+		<Measure format="currency" formula="[PG_TARGET]-[COGS]" name="MARGIN_TARGET" title="Target Margin" type="group"/>
+		<Measure format="currency" formula="[MARGIN_TARGET]-[MARGIN]" name="MARGIN_OPPORTUNITY" title="Margin Opportunity" type="group"/>
+		<Measure format="percent" formula="DivideUnlessZero([MARGIN_TARGET],[PG_TARGET],0)" name="MARGIN_TARGET_PERCENT" title="Percent Margin Target" type="group"/>
+		<Measure format="percent" formula="[MARGIN_TARGET_PERCENT]-[MARGIN_PERCENT]" name="MARGIN_OPPORTUNITY_PERCENT" title="Percent Margin Opportunity" type="group"/>
+		
+		
+		<!-- % Revenue Lift Opportunities by Price Change vs Total Revenue Lift Opportunity-->
+		<!-- Scenario I: Bring below floor to floor and keep others unchanged -->
+		<Measure name="REV_OPP_LIFT_FLOOR_PERC" title="% Rev Lift Opp at Floor" format="percent_2Dec"
+        formula="
+                 IIF(
+                     (SUM({([PRICE_CHANGE_FLOOR].[PRICE_CHANGE_FLOOR].[All])}, [Measures].[FLOOR_OPPORTUNITY]) = 0),
+                     NULL,
+                     [Measures].[FLOOR_OPPORTUNITY]/SUM({([PRICE_CHANGE_FLOOR].[PRICE_CHANGE_FLOOR].[All])}, [Measures].[FLOOR_OPPORTUNITY])
+                     )" type="mdx"/>
+        
+		<!-- Scenario II: Bring everyone to target  can be negative opportunity if transactions are above Target -->
+		<Measure name="REV_OPP_LIFT_TARGET_ALL_PERC" title="% Rev Lift Opp at Target All" format="percent_2Dec"
+        formula="IIF(
+                     (SUM({([PRICE_CHANGE_TARGET_ALL].[PRICE_CHANGE_TARGET_ALL].[All])}, [Measures].[TARGET_ALL_OPPORTUNITY]) = 0),
+                     NULL,
+                     [Measures].[TARGET_ALL_OPPORTUNITY]/SUM({([PRICE_CHANGE_TARGET_ALL].[PRICE_CHANGE_TARGET_ALL].[All])}, [Measures].[TARGET_ALL_OPPORTUNITY])
+                     )" type="mdx"/>
+		
+		
+		<!-- Scenario III: Incremental Target: Bring below floor to floor, between floor and target to target, and keep others unchanged  -->	
+		<Measure name="REV_OPP_LIFT_INC_PERC" title="% Rev Lift Opp at Incr Target" format="percent_2Dec"
+        formula="
+              IIF(
+                     (SUM({([PRICE_CHANGE_INC].[PRICE_CHANGE_INC].[All])}, [Measures].[INCREMENTAL_TARGET_OPPORTUNITY]) = 0),
+                     NULL,
+                     [Measures].[INCREMENTAL_TARGET_OPPORTUNITY]/SUM({([PRICE_CHANGE_INC].[PRICE_CHANGE_INC].[All])}, [Measures].[INCREMENTAL_TARGET_OPPORTUNITY])
+              )" type="mdx"/>
+		
+		<!-- Scenario IV: Bring below target to target and keep others unchanged -->
+		<Measure name="REV_OPP_LIFT_TARGET_PERC" title="% Rev Lift Opp at Target" format="percent_2Dec"
+        formula="IIF(
+                     (SUM({([PRICE_CHANGE_TARGET].[PRICE_CHANGE_TARGET].[All])}, [Measures].[TARGET_OPPORTUNITY]) = 0),
+                     NULL,
+                     [Measures].[TARGET_OPPORTUNITY]/SUM({([PRICE_CHANGE_TARGET].[PRICE_CHANGE_TARGET].[All])}, [Measures].[TARGET_OPPORTUNITY])
+                     )" type="mdx"/>
+        
+
+        <!-- Scenario V: Bring everyone to Achievable Target applying guardrails -->     
+		<Measure name="REV_OPP_LIFT_TARGET_ACHIEV_PERC" title="% Rev Lift Opp at Achievable Target" format="percent_2Dec"
+        formula="IIF(
+                     (SUM({([PRICE_CHANGE_ACHIEV].[PRICE_CHANGE_ACHIEV].[All])}, [Measures].[TARGET_ACHIEV_OPPORTUNITY]) = 0),
+                     NULL,
+                     [Measures].[TARGET_ACHIEV_OPPORTUNITY]/SUM({([PRICE_CHANGE_ACHIEV].[PRICE_CHANGE_ACHIEV].[All])}, [Measures].[TARGET_ACHIEV_OPPORTUNITY])
+                     )" type="mdx"/>
+              
+              
+		<!-- Combined % Rev Lift Opportunity measure depending on the Scenario selection in the Filter -->
+
+		<Measure format="percent_2Dec" name="REV_OPP_LIFT_SCENARIO_PERC" title="% Rev Lift Opp By Scenario" type="mdx" formula="1" />
+		
+		<!-- Rev Lift Opportunity Scenario for the selection in the Filter of Scenarios-->
+		<Measure format="currency-comma" name="REV_OPP_LIFT_FOR_SCENARIO" title="Rev Lift Opp By Scenario" type="mdx"  formula="1" />
+		
+   		<!-- % Impacted (Transacted) Revenue  by Price Change  vs Total Actual (Transacted) Revenue -->
+   		
+		<!-- Scenario I: Bring below floor to floor and keep others unchanged -->
+		<Measure name="IMP_REV_FLOOR_PERC" title="% Impacted Rev at Price Change to Floor" format="percent_2Dec"
+        formula="
+                 IIF(
+                     (SUM({([PRICE_CHANGE_FLOOR].[PRICE_CHANGE_FLOOR].[All])}, [Measures].[SALES_REVENUE]) = 0),
+                     NULL,
+                     [Measures].[SALES_REVENUE]/SUM({([PRICE_CHANGE_FLOOR].[PRICE_CHANGE_FLOOR].[All])}, [Measures].[SALES_REVENUE])
+                     )" type="mdx"/>
+
+		<!-- Scenario II: Bring everyone to target  can be negative opportunity if transactions are above Target -->		 
+		<Measure name="IMP_REV_TARGET_ALL_PERC" title="% Impacted Rev at Price Change to Target All" format="percent_2Dec"
+        formula="IIF(
+                     (SUM({([PRICE_CHANGE_TARGET_ALL].[PRICE_CHANGE_TARGET_ALL].[All])}, [Measures].[SALES_REVENUE]) = 0),
+                     NULL,
+                     [Measures].[SALES_REVENUE]/SUM({([PRICE_CHANGE_TARGET_ALL].[PRICE_CHANGE_TARGET_ALL].[All])}, [Measures].[SALES_REVENUE])
+                     )" type="mdx"/>
+
+
+					 
+		<!-- Scenario III: Incremental Target: Bring below floor to floor, between floor and target to target, and keep others unchanged  -->
+    	<Measure name="IMP_REV_INC_PERC" title="% Impacted Rev at Price Change Incr Target" format="percent_2Dec"
+        formula="
+              IIF(
+                     (SUM({([PRICE_CHANGE_INC].[PRICE_CHANGE_INC].[All])}, [Measures].[SALES_REVENUE]) = 0),
+                     NULL,
+                     [Measures].[SALES_REVENUE]/SUM({([PRICE_CHANGE_INC].[PRICE_CHANGE_INC].[All])}, [Measures].[SALES_REVENUE])
+              )" type="mdx"/>
+			
+			
+		<!-- Scenario IV: Bring below target to target and keep others unchanged -->
+		<Measure name="IMP_REV_TARGET_PERC" title="% Impacted Rev at Price Change to Target" format="percent_2Dec"
+        formula="IIF(
+                     (SUM({([PRICE_CHANGE_TARGET].[PRICE_CHANGE_TARGET].[All])}, [Measures].[SALES_REVENUE]) = 0),
+                     NULL,
+                     [Measures].[SALES_REVENUE]/SUM({([PRICE_CHANGE_TARGET].[PRICE_CHANGE_TARGET].[All])}, [Measures].[SALES_REVENUE])
+                     )" type="mdx"/>
+			  
+        <!-- Scenario V: Bring everyone to Achievable Target applying guardrails -->       
+  		<Measure name="IMP_REV_TARGET_ACHIEV_PERC" title="% Impacted Rev at Price Change to Achievable Target" format="percent_2Dec"
+        formula="IIF(
+                     (SUM({([PRICE_CHANGE_ACHIEV].[PRICE_CHANGE_ACHIEV].[All])}, [Measures].[SALES_REVENUE]) = 0),
+                     NULL,
+                     [Measures].[SALES_REVENUE]/SUM({([PRICE_CHANGE_ACHIEV].[PRICE_CHANGE_ACHIEV].[All])}, [Measures].[SALES_REVENUE])
+                     )" type="mdx"/>
+
+        <!-- Revenue Opportunity Chart measures  -->
+
+		<Measure name="REV_UPLIFT"   title="Rev Uplift" format="currency" 
+		formula="Iif(IsEmpty([Measures].[REV_OPP_LIFT_FOR_SCENARIO]),
+						Null,
+						Sum({[PRICE_CHANGE_TARGET].[PRICE_CHANGE_TARGET].[PRICE_CHANGE_TGT_ID].[0]:[PRICE_CHANGE_TARGET].[PRICE_CHANGE_TARGET].CurrentMember},
+						[Measures].[REV_OPP_LIFT_FOR_SCENARIO]
+						))" type="mdx"/>
+						
+		<Measure name="REV_UPLIFT_PCT"   title="Rev Uplift %" format="percent" 
+					formula="Iif(IsEmpty([Measures].[REV_OPP_LIFT_FOR_SCENARIO]),
+						Null,
+						[Measures].[REV_UPLIFT]/[Measures].[REV_OPP_LIFT_FOR_SCENARIO]
+						)" type="mdx"/>
+			
+        <!--  Guidance Level Analysis measures  -->
+        
+   		<Measure name="CNT_TRANS_BELOW_MIN" title="PG Trans Below Min" type="row" aggregator="sum" format="integer"
+         formula="{CASE WHEN [PG_EXPERT_PERC] &lt; MIN([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID]) THEN 1 ELSE null END}"
+         />
+
+		<Measure name="CNT_TRANS_P_BELOW_MIN" title="PG Trans Partially Below Min" type="row" aggregator="sum" format="integer"
+        formula="{CASE WHEN ([PG_EXPERT_PERC] &gt;= MIN([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID])   )
+                   AND ([PG_FLOOR_PERC] &lt; MIN([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID])) THEN 1 ELSE null END}"
+        />
+
+		<Measure name="CNT_TRANS_IN_HIST_RANGE" title="PG Trans In Historical Range" type="row" aggregator="sum" format="integer"
+        formula="{CASE WHEN ([PG_EXPERT_PERC] &lt;= MAX([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID])   )
+                   AND ([PG_FLOOR_PERC] &gt;= MIN([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID])) THEN 1 ELSE null END}"
+        />
+
+		<Measure name="CNT_TRANS_P_ABOVE_MAX" title="PG Trans Partially Above Max" type="row" aggregator="sum" format="integer"
+        formula="{CASE WHEN ([PG_EXPERT_PERC] &gt; MAX([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID])   )
+                   AND ([PG_FLOOR_PERC] &lt;= MAX([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID])) THEN 1 ELSE null END}"
+        />
+
+		<Measure name="CNT_TRANS_ABOVE_MAX" title="PG Trans Above Max" type="row" aggregator="sum" format="integer"
+         formula="{CASE WHEN [PG_FLOOR_PERC] &gt; MAX([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID]) THEN 1 ELSE null END}"
+         />
+         
+
+   		<Measure aggregator="sum" format="currency-comma"
+         formula="{CASE WHEN [PG_EXPERT_PERC] &lt; MIN([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID]) THEN [SALES_REVENUE] ELSE null END}"
+         name="IMP_REV_TRANS_BELOW_MIN" title="Impacted Rev PG Trans Below Min" type="row"/>
+
+		<Measure aggregator="sum" format="integer"
+        formula="{CASE WHEN ([PG_EXPERT_PERC] &gt;= MIN([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID])  )
+                   AND ([PG_FLOOR_PERC] &lt;= MAX([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID])) THEN [SALES_REVENUE] ELSE null END}"
+        name="IMP_REV_TRANS_IN_HIST_RANGE" title="Impacted Rev PG Trans In Historical Range" type="row"/>
+        
+
+		<Measure aggregator="sum" format="integer"
+         formula="{CASE WHEN [PG_FLOOR_PERC] &gt; MAX([MARGIN_PCT_PG]) OVER (PARTITION BY [PRODUCT_ID]) THEN [SALES_REVENUE] ELSE null END}"
+         name="IMP_REV_TRANS_ABOVE_MAX" title="Impacted Rev PG Trans Above Max" type="row"/>
+         
+
+        <Measure name="CNT_TRANS_BELOW_MIN_PERC" title="% Count PG Trans Below Min" format="percent_2Dec"
+        formula="
+                 IIF(
+                     [Measures].[TXN_COUNT] = 0,
+                     NULL,
+                     [Measures].[CNT_TRANS_BELOW_MIN]/[Measures].[TXN_COUNT]
+                     )" type="mdx"/>
+                     
+        <Measure name="CNT_TRANS_IN_HIST_RANGE_PERC" title="% Count PG Trans In Historical Range" format="percent_2Dec"
+        formula="
+                 IIF(
+                     [Measures].[TXN_COUNT] = 0,
+                     NULL,
+                     [Measures].[CNT_TRANS_IN_HIST_RANGE]/[Measures].[TXN_COUNT]
+                     )" type="mdx"/>
+                     
+        <Measure name="CNT_TRANS_ABOVE_MAX_PERC" title="% Count PG Trans Above Max" format="percent_2Dec"
+        formula="
+                 IIF(
+                     [Measures].[TXN_COUNT] = 0,
+                     NULL,
+                     [Measures].[CNT_TRANS_ABOVE_MAX]/[Measures].[TXN_COUNT]
+                     )" type="mdx"/>
+                     
+        <Measure name="IMP_REV_TRANS_BELOW_MIN_PERC" title="% Impacted Rev PG Trans Below Min" format="percent_2Dec"
+        formula="
+                 IIF(
+                     [Measures].[SALES_REVENUE] = 0,
+                     NULL,
+                     [Measures].[IMP_REV_TRANS_BELOW_MIN]/[Measures].[SALES_REVENUE]
+                     )" type="mdx"/>
+
+        <Measure name="IMP_REV_TRANS_IN_HIST_RANGE_PERC" title="% Impacted Rev PG Trans In Historical Range" format="percent_2Dec"
+        formula="
+                 IIF(
+                     [Measures].[SALES_REVENUE] = 0,
+                     NULL,
+                     [Measures].[IMP_REV_TRANS_IN_HIST_RANGE]/[Measures].[SALES_REVENUE]
+                     )" type="mdx"/>
+
+        <Measure name="IMP_REV_TRANS_ABOVE_MAX_PERC" title="% Impacted Rev PG Trans Above Max" format="percent_2Dec"
+        formula="
+                 IIF(
+                     [Measures].[SALES_REVENUE] = 0,
+                     NULL,
+                     [Measures].[IMP_REV_TRANS_ABOVE_MAX]/[Measures].[SALES_REVENUE]
+                     )" type="mdx"/>
+	</Cube>
+
+ <!-- ============================================================== -->
+ <!-- Formats                                                        -->
+ <!-- ============================================================== -->
+	<FormatType name="currency" value="$#,###"/>
+	<FormatType name="percent" value="#.#%"/>
+	<FormatType name="Number2Decimals" value="#,###.00"/>
+	<FormatType name="number" value="Number"/>
+	<FormatType name="currency-2dec" value="$##.00"/>
+	<FormatType name="currency-3dec" value="$##.000"/>
+	<FormatType name="currency-comma" value="$#,###.00"/>
+	<FormatType name="currency-0dec" value="$#,###"/>
+	<FormatType name="millions" value="Millions"/>
+	<FormatType name="integer" value="#,###"/>
+	<FormatType name="floating" value="##.##"/>
+	<FormatType name="percent_singleDec" value="#.#%"/>
+	<FormatType name="percent_2Dec" value="0.00%"/>
+	<FormatType name="oneDec" value="0.0"/>
+	<FormatType name="twoDec" value="0.00"/>
+	<FormatType name="threeDec" value="0.000"/>
+	<FormatType name="fourDec" value="0.0000"/>
+	<FormatType name="fiveDec" value="0.00000"/>
+	<FormatType name="twoDecComma" value="#,###.00"/>
+	<FormatType name="currency-5dec" value="$#,###.00000"/>
+	<FormatType name="date" value="Date"/>
+	<FormatType name="yen" value="Currency:JPY"/>
+	<FormatType name="pounds" value="Currency:GBP"/>
+	<FormatType name="euro" value="Currency:EUR"/>
+	<FormatType name="date_full_format" value="MMMMM dd, yyyy z"/>
+
+ <!-- ============================================================== -->
+ <!-- CONTEXT BARS                                                   -->
+ <!-- ============================================================== -->
+  <ContextBar cube="TRANSACTIONS" name="STANDARD_CONTEXT">
+      <Dimension name="CUSTOMER"/>
+      <Dimension name="PRODUCT"/>
+      <Dimension name="DATE"/>
+  </ContextBar>
+  
+  <ContextBar cube="TRANSACTIONS" includesComparison="true" includesComparisonToggle="true" name="STANDARD_SEG_CONTEXT_COMP">
+      <Dimension name="CUSTOMER"/>
+      <Dimension name="PRODUCT"/>
+	  <Dimension name="TXN_SEG"/>
+      <Dimension name="DATE"/>
+  </ContextBar>
+
+  <ContextBar cube="TRANSACTIONS" name="STANDARD_SEG_CONTEXT">
+      <Dimension name="CUSTOMER"/>
+      <Dimension name="PRODUCT"/>
+	  <Dimension name="TXN_SEG"/>
+      <Dimension name="DATE"/>
+  </ContextBar>
+<!-- ============ New Context Bar for SA Practice========================= -->
+
+  <ContextBar cube="TRANSACTIONS" name="SALES-TRANSACTION-CONTEXT">
+      <Dimension name="SALES_REP"/>
+      <Dimension name="DATE"/>
+  </ContextBar>
+  <!-- ============ New Context Bar for COMPLETE SA Practice========================= -->
+
+  <ContextBar cube="TRANSACTIONS" name="SALES-TRANSACTION-COMPLETE">
+      <Dimension name="CUSTOMER"/>
+      <Dimension name="PRODUCT"/>
+	  <Dimension name="REGION"/>
+	  <Dimension name="SALES_REP"/>
+      <Dimension name="DATE"/>
+  </ContextBar>
+ <!-- ============================================================== -->
+ <!-- EXECUTION SECTIONS PO		                                     -->
+ <!-- ============================================================== -->
+
+	<PricingExecution>
+		<CustomerDimension name="CUSTOMER"/>
+		<ProductDimension name="PRODUCT"/>
+		<AdditionalDimensions>
+			<Dimension name="TXN_SEG"/>
+		</AdditionalDimensions>
+		<PricingManager/>
+		<Customer dataDimension="CUSTOMER">
+			<Property name="SOLD_TO_ID" role="id" title="Sold_To_Customer_ID"/>
+			<Property name="CUSTOMER_DESC" role="name" title="Sold_To_Customer_Desc"/>
+		</Customer>
+	</PricingExecution>
+
+ <!-- ============================================================== -->
+ <!-- PRICING GUIDANCE			                                     -->
+ <!-- ============================================================== -->
+ 
+	<PricingOptimization>
+	 <PricingGuidance>
+     
+	    <MarketSegmentGuidance name="ALL_PRODUCTS">
+          <Transactions cube="TRANSACTIONS" historicalHorizon="180" inputMeasure="MARGIN_PCT_PG" minimumThreshold="18" timeDimension="DATE"/>
+          <Filter dimension="PG_VALIDITY" validValues="Y"/>
+
+          <Dimensions>
+            <Variable name="CUSTOMER">
+              <Level name="All"/>
+              <Level name="SOLD_TO_ID"/>
+            </Variable>
+            <Fixed level="TXN_SEG" name="TXN_SEG"/>
+          </Dimensions>
+          
+        <Market>
+			<Measure name="Market">
+				<TrendedMeasureAlgorithm>
+					<DaysPerPeriod days="30"/>
+					<Weight value="0.50"/>
+					<Weight value="0.25"/>
+					<Weight value="0.125"/>
+					<Weight value="0.0625"/>
+					<Weight value="0.03125"/>
+					<Weight value="0.03125"/>
+					<ResponseWeight inputMeasure="SALES_REVENUE"/>
+				</TrendedMeasureAlgorithm>
+			</Measure>
+			<Sensitivity>
+				<AbsoluteDifferentialCalculatorAlgorithm>
+					<ResponseWeight inputMeasure="SALES_REVENUE"/>
+				</AbsoluteDifferentialCalculatorAlgorithm>
+			</Sensitivity>
+		</Market>
+
+          <OutputMeasures>
+            <Measure name="Average">
+              <AverageAlgorithm/>
+            </Measure>
+            <Measure name="Minimum">
+              <MinAlgorithm/>
+            </Measure>
+            <Measure name="Maximum">
+              <MaxAlgorithm/>
+            </Measure>
+            <Measure name="Last">
+              <MinAlgorithm>
+                <UseMostRecentTransactionTime value="true"/>
+              </MinAlgorithm>
+            </Measure>
+			
+	        <Measure name="Willingness-To-Pay">
+	  	      <Level name="All">
+			    <PercentileComputingAlgorithm>
+                  <Percentile value="60"/>
+               	</PercentileComputingAlgorithm>
+          	  </Level>
+		      <Level name="SOLD_TO_ID">
+			    <AbsoluteDifferentialApplierAlgorithm>
+				  <Percentile value="60"/>
+				  <BaseMeasure name="Market"/>
+		    	</AbsoluteDifferentialApplierAlgorithm>
+          	  </Level>
+	        </Measure>
+	        
+            <Measure name="Target">
+              <Level name="All">
+                <TargetMaximizingAlgorithm>
+                  <Measure name="Willingness-To-Pay"/>
+                  <Measure name="Market" rollUpType="NoRollUp"/>
+                </TargetMaximizingAlgorithm>
+              </Level>
+              <Level name="SOLD_TO_ID">
+                 <TargetMaximizingAlgorithm>
+                   <Measure name="Willingness-To-Pay"/>
+                   <Measure name="Market" rollUpType="RollUp"/>
+                 </TargetMaximizingAlgorithm>
+              </Level>
+            </Measure>
+            
+	        <Measure name="Floor">
+		      <Level name="All">
+			    <PercentileComputingAlgorithm>
+				   <Percentile value="20"/>
+                   <BaseMeasure name="Target"/>
+				   <BasePercentile value="60"/>
+               	</PercentileComputingAlgorithm>
+              </Level>
+		      <Level name="SOLD_TO_ID">
+			     <AbsoluteDifferentialApplierAlgorithm>
+				   <Percentile value="20"/>
+                   <BaseMeasure name="Target"/>
+				   <BasePercentile value="60"/>
+			     </AbsoluteDifferentialApplierAlgorithm>
+               </Level>
+             </Measure>
+
+             <Measure name="Expert">
+		       <Level name="All">
+			     <PercentileComputingAlgorithm>
+				   <Percentile value="80"/>
+                   <BaseMeasure name="Target"/>
+				   <BasePercentile value="60"/>
+               	 </PercentileComputingAlgorithm>
+               </Level>
+		       <Level name="SOLD_TO_ID">
+			     <AbsoluteDifferentialApplierAlgorithm>
+				   <Percentile value="80"/>
+                   <BaseMeasure name="Target"/>
+				   <BasePercentile value="60"/>
+			     </AbsoluteDifferentialApplierAlgorithm>
+               </Level>
+            </Measure>
+          </OutputMeasures>
+        </MarketSegmentGuidance>
+	 
+        <MarketSegmentGuidance name="PRODUCT_ID">
+          <Transactions cube="TRANSACTIONS" historicalHorizon="180" inputMeasure="MARGIN_PCT_PG" minimumThreshold="18" timeDimension="DATE"/>
+          <Filter dimension="PG_VALIDITY" validValues="Y"/>
+
+          <Dimensions>
+            <Variable name="CUSTOMER">
+              <Level name="All"/>
+              <Level name="SOLD_TO_ID"/>
+            </Variable>
+            <Fixed level="PRODUCT_ID" name="PRODUCT"/>
+            <Fixed level="TXN_SEG" name="TXN_SEG"/>
+          </Dimensions>
+
+         <Market>
+			<Measure name="Market">
+				<TrendedMeasureAlgorithm>
+					<DaysPerPeriod days="30"/>
+					<Weight value="0.50"/>
+					<Weight value="0.25"/>
+					<Weight value="0.125"/>
+					<Weight value="0.0625"/>
+					<Weight value="0.03125"/>
+					<Weight value="0.03125"/>
+					<ResponseWeight inputMeasure="SALES_REVENUE"/>
+				</TrendedMeasureAlgorithm>
+			</Measure>
+			<Sensitivity>
+				<AbsoluteDifferentialCalculatorAlgorithm>
+					<ResponseWeight inputMeasure="SALES_REVENUE"/>
+				</AbsoluteDifferentialCalculatorAlgorithm>
+			</Sensitivity>
+		</Market>
+
+          <OutputMeasures>
+            <Measure name="Average">
+              <AverageAlgorithm/>
+            </Measure>
+            <Measure name="Minimum">
+              <MinAlgorithm/>
+            </Measure>
+            <Measure name="Maximum">
+              <MaxAlgorithm/>
+            </Measure>
+            <Measure name="Last">
+              <MinAlgorithm>
+                <UseMostRecentTransactionTime value="true"/>
+              </MinAlgorithm>
+            </Measure>
+			
+	        <Measure name="Willingness-To-Pay">
+	  	      <Level name="All">
+			    <PercentileComputingAlgorithm>
+                  <Percentile value="60"/>
+               	</PercentileComputingAlgorithm>
+          	  </Level>
+		      <Level name="SOLD_TO_ID">
+			    <AbsoluteDifferentialApplierAlgorithm>
+				  <Percentile value="60"/>
+				  <BaseMeasure name="Market"/>
+		    	</AbsoluteDifferentialApplierAlgorithm>
+          	  </Level>
+	        </Measure>
+			
+            <Measure name="Target">
+              <Level name="All">
+                <TargetMaximizingAlgorithm>
+                  <Measure name="Willingness-To-Pay"/>
+                  <Measure name="Market" rollUpType="NoRollUp"/>
+                </TargetMaximizingAlgorithm>
+              </Level>
+              <Level name="SOLD_TO_ID">
+                 <TargetMaximizingAlgorithm>
+                   <Measure name="Willingness-To-Pay"/>
+                   <Measure name="Market" rollUpType="RollUp"/>
+                 </TargetMaximizingAlgorithm>
+              </Level>
+            </Measure>
+            
+	        <Measure name="Floor">
+		      <Level name="All">
+			    <PercentileComputingAlgorithm>
+				   <Percentile value="20"/>
+                   <BaseMeasure name="Target"/>
+				   <BasePercentile value="60"/>
+               	</PercentileComputingAlgorithm>
+              </Level>
+		      <Level name="SOLD_TO_ID">
+			     <AbsoluteDifferentialApplierAlgorithm>
+				   <Percentile value="20"/>
+                   <BaseMeasure name="Target"/>
+				   <BasePercentile value="60"/>
+			     </AbsoluteDifferentialApplierAlgorithm>
+               </Level>
+             </Measure>
+
+             <Measure name="Expert">
+		       <Level name="All">
+			     <PercentileComputingAlgorithm>
+				   <Percentile value="80"/>
+                   <BaseMeasure name="Target"/>
+				   <BasePercentile value="60"/>
+               	 </PercentileComputingAlgorithm>
+               </Level>
+		       <Level name="SOLD_TO_ID">
+			     <AbsoluteDifferentialApplierAlgorithm>
+				   <Percentile value="80"/>
+                   <BaseMeasure name="Target"/>
+				   <BasePercentile value="60"/>
+			     </AbsoluteDifferentialApplierAlgorithm>
+               </Level>
+            </Measure>
+          </OutputMeasures>
+        </MarketSegmentGuidance>     
+        
+		<MarketSegmentGuidance name="ACHIEVABLE">
+          <Transactions cube="TRANSACTIONS" historicalHorizon="180" inputMeasure="MARGIN_PCT_PG" minimumThreshold="1" timeDimension="DATE"/>
+          <Filter dimension="PG_VALIDITY" validValues="Y"/>
+
+          <Dimensions>
+            <Variable name="CUSTOMER">
+              <Level name="SOLD_TO_ID"/>
+            </Variable>
+            <Fixed level="PRODUCT_ID" name="PRODUCT"/>
+          </Dimensions>
+
+         <Market>
+			<Measure name="Market">
+				<TrendedMeasureAlgorithm>
+					<DaysPerPeriod days="30"/>
+					<Weight value="0.50"/>
+					<Weight value="0.25"/>
+					<Weight value="0.125"/>
+					<Weight value="0.0625"/>
+					<Weight value="0.03125"/>
+					<Weight value="0.03125"/>
+					<ResponseWeight inputMeasure="SALES_REVENUE"/>
+				</TrendedMeasureAlgorithm>
+			</Measure>
+			<Sensitivity>
+				<AbsoluteDifferentialCalculatorAlgorithm>
+					<ResponseWeight inputMeasure="SALES_REVENUE"/>
+				</AbsoluteDifferentialCalculatorAlgorithm>
+			</Sensitivity>
+		</Market>
+        <OutputMeasures>
+            <Measure name="Average">
+              <AverageAlgorithm/>
+            </Measure>
+            <Measure name="Minimum">
+              <MinAlgorithm/>
+            </Measure>
+            <Measure name="Maximum">
+              <MaxAlgorithm/>
+            </Measure>
+          </OutputMeasures>
+        </MarketSegmentGuidance>   
+      </PricingGuidance>
+	</PricingOptimization>
+
+
+	<SegmentationModule/>
+<LastMigrationCompleted value="3"/>
+</Application>
